@@ -1,7 +1,7 @@
 // NotLegos Blocks
 
 //% block="Not LEGOs" color=#0031AF weight=1000 icon="\uf6ec"
-//% groups=['Display', 'Laser', 'others']
+//% groups=['Display', 'Laser', 'Radio', 'others']
 namespace notLegos {
 
     /*
@@ -92,12 +92,12 @@ namespace notLegos {
     }
 
     /*
-     * Fade a Laser (or somesuch)
+     * Throttle Radio Requests for JoystickBit
      */
     //% blockId=notlegos_radio_throttle
     //% subcategory="Radio" group="Radio" color=#EA5532
     //% weight=100
-    //% block="Radio send throttled %theString with numerical value $theNumber"
+    //% block="Radio send throttled %theString with numerical value %theNumber"
     //% inlineInputMode=inline
 
     let throttleLastString = ""
