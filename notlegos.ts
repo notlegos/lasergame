@@ -91,28 +91,7 @@ namespace notLegos {
         }
     }
 
-    /*
-     * Throttle Radio Requests for JoystickBit
-     */
-    //% blockId=notlegos_radio_throttle
-    //% subcategory="Radio" group="Radio" color=#EA5532
-    //% weight=100
-    //% block="Radio send throttled %theString with numerical value %theNumber"
-    //% inlineInputMode=inline
 
-    let throttleLastString = ""
-    let throttleLastNumber = 0
-    let throttleLastSend = 0
-
-    export function radioToggle(theString: String, theNumber: number = 0): void {
-        let requestTime = 0
-        if (theString == throttleLastString){
-            if (throttleLastSend - 0){
-
-            }
-        }
-
-    }
 
     function RJpin_to_digital(Rjpin: DigitalRJPin): any {
         let pin = DigitalPin.P1

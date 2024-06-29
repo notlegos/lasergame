@@ -1,5 +1,5 @@
 {
-    "name": "lasergame",
+    "name": "lasergame (remote)",
     "description": "",
     "dependencies": {
         "core": "*",
@@ -30,5 +30,5 @@
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "tsprj"
+    "preferredEditor": "blocksprj"
 }

@@ -1,49 +1,43 @@
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P14, joystickbit.ButtonType.down, function () {
-    pressTime = input.runningTime()
-    if (pressTime - lastE > 40) {
-        lastE = pressTime
-        radio.sendValue("joyButton", 3)
-    }
+    radioThrottle("joyButton", 3)
 })
 input.onButtonPressed(Button.A, function () {
-    pressTime = input.runningTime()
-    if (pressTime - lastA > 40) {
-        lastA = pressTime
-        radio.sendValue("joyButton", 5)
-    }
+    radioThrottle("joyButton", 5)
 })
-joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P15, joystickbit.ButtonType.down, function () {
-    pressTime = input.runningTime()
-    if (pressTime - lastF > 40) {
-        lastF = pressTime
-        radio.sendValue("joyButton", 4)
+function radioThrottle (theString: string, theNumber: number) {
+    requestTime = input.runningTime()
+    if (theString == "joyButton") {
+        if (!(theNumber == throttleLastNumber && requestTime - throttleLastSend < 100)) {
+            radio.sendValue(theString, theNumber)
+        }
+    } else {
+        if (theString == throttleLastString && theNumber == throttleLastNumber) {
+            basic.pause(0)
+        } else {
+            radio.sendValue(theString, theNumber)
+        }
     }
+    throttleLastSend = requestTime
+    throttleLastString = theString
+    throttleLastNumber = theNumber
+}
+joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P15, joystickbit.ButtonType.down, function () {
+    radioThrottle("joyButton", 4)
+})
+input.onButtonPressed(Button.AB, function () {
+    radioThrottle("joyButton", 7)
 })
 input.onButtonPressed(Button.B, function () {
-    pressTime = input.runningTime()
-    if (pressTime - lastB > 40) {
-        radio.sendValue("joyButton", 6)
-        lastB = pressTime
-    }
+    radioThrottle("joyButton", 6)
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
-    pressTime = input.runningTime()
-    if (pressTime - lastD > 40) {
-        joystickbit.Vibration_Motor(100)
-        lastD = pressTime
-        radio.sendValue("joyButton", 2)
-    }
+    radioThrottle("joyButton", 2)
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P12, joystickbit.ButtonType.down, function () {
-    joystickbit.Vibration_Motor(100)
-    pressTime = input.runningTime()
-    if (pressTime - lastC > 40) {
-        lastC = pressTime
-        radio.sendValue("joyButton", 1)
-    }
+    radioThrottle("joyButton", 1)
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
-    radio.sendValue("joyButton", 7)
+    radioThrottle("joyButton", 8)
 })
 let isUp = false
 let isLeft = false
@@ -52,63 +46,50 @@ let isLeftRight = false
 let inDeadzone = false
 let theY = 0
 let theX = 0
-let pressTime = 0
-let lastF = 0
-let lastE = 0
-let lastD = 0
-let lastC = 0
-let lastB = 0
-let lastA = 0
+let requestTime = 0
+let throttleLastSend = 0
+let throttleLastNumber = 0
+let throttleLastString = ""
 radio.setGroup(80)
 joystickbit.initJoystickBit()
 let deadzone = 20
-lastA = input.runningTime()
-lastB = input.runningTime()
-lastC = input.runningTime()
-lastD = input.runningTime()
-lastE = input.runningTime()
-lastF = input.runningTime()
-basic.showIcon(IconNames.Heart)
+throttleLastString = ""
+throttleLastNumber = 0
+throttleLastSend = 0
 basic.forever(function () {
     theX = joystickbit.getRockerValue(joystickbit.rockerType.X)
     theY = joystickbit.getRockerValue(joystickbit.rockerType.Y)
     inDeadzone = Math.abs(512 - theX) < deadzone && Math.abs(512 - theY) < deadzone
     if (inDeadzone) {
-        basic.pause(2)
+        basic.pause(0)
     } else {
         isLeftRight = Math.abs(512 - theX) > Math.abs(512 - theY)
         if (isLeftRight) {
             while (!(inDeadzone)) {
                 theX = joystickbit.getRockerValue(joystickbit.rockerType.X)
                 inDeadzone = Math.abs(512 - theX) < deadzone
-                magnitude = Math.round(Math.map(Math.abs(512 - theX), 0, 512, 0, 100))
+                magnitude = Math.round(Math.round(Math.map(Math.abs(512 - theX), 0, 512, 0, 3)))
                 isLeft = theX > 512
                 if (isLeft) {
-                    radio.sendValue("joyLeft", magnitude)
+                    radioThrottle("joyLeft", magnitude)
                 } else {
-                    radio.sendValue("joyRight", magnitude)
+                    radioThrottle("joyRight", magnitude)
                 }
             }
-            for (let index = 0; index < 10; index++) {
-                radio.sendValue("joyCenter", 1)
-            }
-            basic.pause(100)
+            radioThrottle("joyCenter", 1)
         } else if (!(isLeftRight)) {
             while (!(inDeadzone)) {
                 theY = joystickbit.getRockerValue(joystickbit.rockerType.Y)
                 inDeadzone = Math.abs(512 - theY) < deadzone
-                magnitude = Math.round(Math.map(Math.abs(512 - theY), 0, 512, 0, 100))
+                magnitude = Math.round(Math.round(Math.map(Math.abs(512 - theY), 0, 512, 0, 3)))
                 isUp = theY > 512
                 if (isUp) {
-                    radio.sendValue("joyUp", magnitude)
+                    radioThrottle("joyUp", magnitude)
                 } else {
-                    radio.sendValue("joyDown", magnitude)
+                    radioThrottle("joyDown", magnitude)
                 }
             }
-            for (let index = 0; index < 10; index++) {
-                radio.sendValue("joyCenter", 1)
-            }
-            basic.pause(100)
+            radioThrottle("joyCenter", 1)
         }
     }
 })
