@@ -236,14 +236,53 @@ basic.forever(function () {
 //
 
 Remote Control
+
+joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P14, joystickbit.ButtonType.down, function () {
+    pressTime = input.runningTime()
+    if (pressTime - lastE > 40) {
+        lastE = pressTime
+        radio.sendValue("joyButton", 3)
+    }
+})
+input.onButtonPressed(Button.A, function () {
+    pressTime = input.runningTime()
+    if (pressTime - lastA > 40) {
+        lastA = pressTime
+        radio.sendValue("joyButton", 5)
+    }
+})
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P15, joystickbit.ButtonType.down, function () {
-    basic.showIcon(IconNames.Heart)
-    radio.sendValue("message", input.runningTime())
-    basic.pause(100)
-    basic.clearScreen()
+    pressTime = input.runningTime()
+    if (pressTime - lastF > 40) {
+        lastF = pressTime
+        radio.sendValue("joyButton", 4)
+    }
+})
+input.onButtonPressed(Button.B, function () {
+    pressTime = input.runningTime()
+    if (pressTime - lastB > 40) {
+        radio.sendValue("joyButton", 6)
+        lastB = pressTime
+    }
+})
+joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
+    pressTime = input.runningTime()
+    if (pressTime - lastD > 40) {
+        joystickbit.Vibration_Motor(100)
+        lastD = pressTime
+        radio.sendValue("joyButton", 2)
+    }
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P12, joystickbit.ButtonType.down, function () {
     joystickbit.Vibration_Motor(100)
+    pressTime = input.runningTime()
+    if (pressTime - lastC > 40) {
+        lastC = pressTime
+        radio.sendValue("joyButton", 1)
+    }
+})
+input.onLogoEvent(TouchButtonEvent.Pressed, function () {
+    radio.sendValue("joyButton", 7)
 })
 let isUp = false
 let isLeft = false
@@ -252,9 +291,22 @@ let isLeftRight = false
 let inDeadzone = false
 let theY = 0
 let theX = 0
+let pressTime = 0
+let lastF = 0
+let lastE = 0
+let lastD = 0
+let lastC = 0
+let lastB = 0
+let lastA = 0
 radio.setGroup(80)
 joystickbit.initJoystickBit()
 let deadzone = 20
+lastA = input.runningTime()
+lastB = input.runningTime()
+lastC = input.runningTime()
+lastD = input.runningTime()
+lastE = input.runningTime()
+lastF = input.runningTime()
 basic.forever(function () {
     theX = joystickbit.getRockerValue(joystickbit.rockerType.X)
     theY = joystickbit.getRockerValue(joystickbit.rockerType.Y)
@@ -275,7 +327,7 @@ basic.forever(function () {
                     radio.sendValue("joyRight", magnitude)
                 }
             }
-            radio.sendString("joyDead")
+            radio.sendValue("joyDead", magnitude)
         } else if (!(isLeftRight)) {
             while (!(inDeadzone)) {
                 theY = joystickbit.getRockerValue(joystickbit.rockerType.Y)
@@ -288,7 +340,7 @@ basic.forever(function () {
                     radio.sendValue("joyDown", magnitude)
                 }
             }
-            radio.sendString("joyDead")
+            radio.sendValue("joyDead", magnitude)
         }
     }
     basic.pause(1000)
@@ -296,26 +348,73 @@ basic.forever(function () {
 
 
 
-> Open this page at [https://notlegos.github.io/lasergame/](https://notlegos.github.io/lasergame/)
-
-## Use as Extension
-
-This repository can be added as an **extension** in MakeCode.
-
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for **https://github.com/notlegos/lasergame** and import
-
-## Edit this project
-
-To edit this repository in MakeCode.
-
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **Import** then click on **Import URL**
-* paste **https://github.com/notlegos/lasergame** and click import
-
-#### Metadata (used for search, rendering)
-
-* for PXT/microbit
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
+// TARGET CODE BELOW
+input.onButtonPressed(Button.A, function () {
+	
+})
+joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P15, joystickbit.ButtonType.down, function () {
+    basic.showIcon(IconNames.Heart)
+    radio.sendValue("message", input.runningTime())
+    basic.pause(100)
+    basic.clearScreen()
+})
+radio.onReceivedString(function (receivedString) {
+    Connected.showUserText(7, receivedString)
+})
+input.onButtonPressed(Button.B, function () {
+	
+})
+radio.onReceivedValue(function (name, value) {
+    Connected.showUserText(3, name)
+    Connected.showUserNumber(4, value)
+})
+let hits = 0
+let lastHitWasRed = false
+let isRed = false
+radio.setGroup(80)
+let strip = Connected.create(Connected.DigitalRJPin.J3, 8, Connected.NeoPixelMode.RGB)
+strip.showColor(Connected.colors(Connected.NeoPixelColors.Blue))
+let hitsRequired = 2
+Connected.MP3SetPort(Connected.DigitalRJPin.J4)
+Connected.setVolume(15)
+Connected.folderPlay("01", "007")
+Connected.showUserText(8, "goodbye daisy")
+basic.showIcon(IconNames.Happy)
+neZha.setServoSpeed(neZha.ServoList.S1, 1)
+neZha.setServoSpeed(neZha.ServoList.S2, 1)
+neZha.setServoAngle(neZha.ServoTypeList._270, neZha.ServoList.S1, 130)
+neZha.setServoAngle(neZha.ServoTypeList._360, neZha.ServoList.S2, 215)
+basic.pause(2000)
+neZha.setServoAngle(neZha.ServoTypeList._360, neZha.ServoList.S2, 135)
+neZha.setServoAngle(neZha.ServoTypeList._270, neZha.ServoList.S1, 170)
+basic.pause(2000)
+neZha.setServoAngle(neZha.ServoTypeList._360, neZha.ServoList.S2, 185)
+neZha.setServoAngle(neZha.ServoTypeList._270, neZha.ServoList.S1, 150)
+basic.pause(2000)
+basic.showIcon(IconNames.Heart)
+strip.showColor(Connected.colors(Connected.NeoPixelColors.Black))
+Connected.execute(Connected.playType.Stop)
+basic.forever(function () {
+    isRed = Connected.checkColor(Connected.ColorList.red)
+    Connected.showUserText(8, convertToText(isRed))
+    if (isRed) {
+        if (hits == hitsRequired) {
+            Connected.setVolume(20)
+            Connected.folderPlay("01", "004")
+            basic.showIcon(IconNames.Sad)
+            strip.showColor(Connected.colors(Connected.NeoPixelColors.Red))
+        }
+        if (!(lastHitWasRed)) {
+            Connected.setVolume(25)
+            Connected.folderPlay("01", "001")
+            basic.showIcon(IconNames.Angry)
+        }
+        hits = hits + 1
+        Connected.showUserNumber(2, hits)
+    } else if (lastHitWasRed) {
+        basic.showIcon(IconNames.Happy)
+        hits = 0
+        strip.showColor(Connected.colors(Connected.NeoPixelColors.Black))
+    }
+    lastHitWasRed = isRed
+})

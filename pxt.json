@@ -16,10 +16,6 @@
         "planetxbasic.ts",
         "nezha.ts",
         "planetxai.ts",
-        "background.ts",
-        "irreceiver.ts",
-        "bot.ts",
-        "kong.ts",
         "oled.ts",
         "notlegos.ts",
         "joystickBit.ts"
