@@ -34,6 +34,11 @@ radio.onReceivedValue(function (name, value) {
     if (name == "joyVibrate") {
         joystickbit.Vibration_Motor(value)
     }
+    if (name == "joyAngry") {
+        basic.showIcon(IconNames.Angry)
+        joystickbit.Vibration_Motor(value)
+        basic.clearScreen()
+    }
 })
 joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P13, joystickbit.ButtonType.down, function () {
     radioThrottle("joyButton", 2)
@@ -42,7 +47,13 @@ joystickbit.onButtonEvent(joystickbit.JoystickBitPin.P12, joystickbit.ButtonType
     radioThrottle("joyButton", 1)
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
-    radioThrottle("joyButton", 8)
+    if (theChannel == 80) {
+        theChannel = 81
+    } else {
+        theChannel = 80
+    }
+    radio.setGroup(theChannel)
+    basic.showNumber(theChannel)
 })
 let requestTime = 0
 let isUp = false
@@ -55,7 +66,9 @@ let theX = 0
 let throttleLastSend = 0
 let throttleLastNumber = 0
 let throttleLastString = ""
-radio.setGroup(80)
+let theChannel = 0
+theChannel = 80
+radio.setGroup(theChannel)
 joystickbit.initJoystickBit()
 let deadzone = 20
 throttleLastString = ""
