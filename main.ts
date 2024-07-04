@@ -9,6 +9,7 @@ function radioThrottle (theString: string, theNumber: number) {
     if (theString == "joyButton") {
         if (!(theNumber == throttleLastNumber && requestTime - throttleLastSend < 100)) {
             radio.sendValue(theString, theNumber)
+            basic.pause(100)
         }
     } else {
         if (theString == throttleLastString && theNumber == throttleLastNumber) {
