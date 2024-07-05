@@ -7,7 +7,7 @@ input.onButtonPressed(Button.A, function () {
 function radioThrottle (theString: string, theNumber: number) {
     requestTime = input.runningTime()
     if (theString == "joyButton") {
-        if (!(theNumber == throttleLastNumber && requestTime - throttleLastSend < 100)) {
+        if (!(theNumber == throttleLastNumber && requestTime - throttleLastSend < 200)) {
             radio.sendValue(theString, theNumber)
             basic.pause(100)
         }
